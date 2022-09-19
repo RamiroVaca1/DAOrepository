@@ -1,6 +1,6 @@
 package com.solvd;
 
-public class hideConnection {
+public class hideConnections {
 
     public static String jdbc= "jdbc:mysql://localhost:3306/supermarket";
     public static String root = "root";

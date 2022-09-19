@@ -2,7 +2,7 @@ package com.solvd.MySQLDAO;
 
 import com.solvd.DAO.Boss_infoDAO;
 import com.solvd.beams.Boss_info;
-import static com.solvd.hideConnection.*;
+import static com.solvd.hideConnections.*;
 
 import java.sql.*;
 import java.util.ArrayList;
