@@ -2,7 +2,7 @@ package com.solvd.MySQLDAO;
 
 import com.solvd.DAO.Employee_infoDAO;
 import com.solvd.beams.Employee_info;
-import static com.solvd.hideConnections.*;
+import static com.solvd.hideConnection.*;
 
 import java.sql.*;
 import java.util.ArrayList;
