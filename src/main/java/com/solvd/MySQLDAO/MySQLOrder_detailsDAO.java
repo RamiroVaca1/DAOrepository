@@ -2,6 +2,7 @@ package com.solvd.MySQLDAO;
 
 import com.solvd.DAO.Order_detailsDAO;
 import com.solvd.beams.Order_details;
+import static com.solvd.hideConnection.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -177,7 +178,7 @@ public class MySQLOrder_detailsDAO implements Order_detailsDAO {
     public static void main(String[] args) throws SQLException {
         Connection conn = null;
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/supermarket","root","tierrasperdidas123");
+            conn = DriverManager.getConnection(jdbc,root,password);
             Order_detailsDAO dao = new MySQLOrder_detailsDAO(conn);
             /* Boss nuevo = new Boss("Anote10", 22, 42000,"All");
             nuevo.setBoss_id(4L);

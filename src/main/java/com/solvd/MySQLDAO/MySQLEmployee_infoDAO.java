@@ -2,6 +2,7 @@ package com.solvd.MySQLDAO;
 
 import com.solvd.DAO.Employee_infoDAO;
 import com.solvd.beams.Employee_info;
+import static com.solvd.hideConnection.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -184,7 +185,7 @@ public class MySQLEmployee_infoDAO implements Employee_infoDAO {
     public static void main(String[] args) throws SQLException {
         Connection conn = null;
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/supermarket","root","tierrasperdidas123");
+            conn = DriverManager.getConnection(jdbc,root,password);
             Employee_infoDAO dao = new MySQLEmployee_infoDAO(conn);
             /* Boss nuevo = new Boss("Anote10", 22, 42000,"All");
             nuevo.setBoss_id(4L);
