@@ -1,6 +1,6 @@
 # Default ignored files
 /shelf/
 /workspace.xml
-solvd/
+src/main/java/com/solvd/
 hideConnections.java
 hideConnections.class
