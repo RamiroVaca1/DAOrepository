@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<monitors>
+    <monitor id="2" name="DUOLIQUO" model="24LWOEM42" hz="60" brand="AOC"/>
+    <monitor id="3" name="INSTANT" model="24024LMAE2L1" hz="240" brand="AOC"/>
+</monitors>
