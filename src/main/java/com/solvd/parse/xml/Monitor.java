@@ -10,15 +10,15 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Monitor {
 
-    @XmlAttribute
+    @XmlAttribute (name = "id")
     private int id;
-    @XmlAttribute
+    @XmlAttribute (name = "name")
     private String name;
-    @XmlAttribute
+    @XmlAttribute (name = "model")
     private String model;
-    @XmlAttribute
+    @XmlAttribute (name = "hz")
     private int hz;
-    @XmlAttribute
+    @XmlAttribute (name = "brand")
     private String brand;
 
 
