@@ -1,4 +1,4 @@
-package com.solvd.MySQLDAO;
+package com.solvd.Controller.MySQLDAO;
 
 import com.solvd.DAO.Products_infoDAO;
 import com.solvd.beams.Products_info;

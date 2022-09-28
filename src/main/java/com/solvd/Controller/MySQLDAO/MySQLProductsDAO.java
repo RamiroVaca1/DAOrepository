@@ -1,36 +1,36 @@
-package com.solvd.MySQLDAO;
+package com.solvd.Controller.MySQLDAO;
 
-import com.solvd.DAO.OrdersDAO;
-import com.solvd.beams.Orders;
+import com.solvd.DAO.ProductsDAO;
+import com.solvd.beams.Products;
 import static com.solvd.hideConnection.*;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySQLOrdersDAO implements OrdersDAO {
+public class MySQLProductsDAO implements ProductsDAO {
 
     private Connection conn;
 
-    public MySQLOrdersDAO(Connection conn){
+    public MySQLProductsDAO(Connection conn){
         this.conn = conn;
     }
 
-    final String INSERT = "INSERT INTO orders (order_date, order_status, client_id) VALUES (?, ?, ?)";
-    final String UPDATE = "UPDATE orders SET order_date = ?, order_status = ?, client_id = ? WHERE order_id = ?";
-    final String DELETE = "DELETE FROM orders WHERE order_id = ?";
-    final String GETONE = "SELECT order_id, order_date, order_status, client_id FROM orders WHERE order_id = ?";
-    final String GETALL = "SELECT order_id, order_date, order_status, client_id FROM orders";
+    final String INSERT = "INSERT INTO products (product_name, product_quantity, product_price) VALUES (?, ?, ?)";
+    final String UPDATE = "UPDATE products SET product_name = ?, product_quantity = ?, product_price = ? WHERE product_id = ?";
+    final String DELETE = "DELETE FROM products WHERE product_id = ?";
+    final String GETONE = "SELECT product_id, product_name, product_quantity, product_price FROM products WHERE product_id = ?";
+    final String GETALL = "SELECT product_id, product_name, product_quantity, product_price FROM products";
 
 
     @Override
-    public void insert(Orders a) {
+    public void insert(Products a) {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(INSERT);
-            stat.setDate(1,new Date(a.getOrder_date().getTime()));
-            stat.setString(2, a.getOrder_status());
-            stat.setDouble(3, a.getClient_id());
+            stat.setString(1, a.getProduct_name());
+            stat.setString(2, a.getProduct_quantity());
+            stat.setDouble(3, a.getProduct_price());
             if (stat.executeUpdate() == 0) {
                 throw new SQLException();
             }
@@ -48,14 +48,14 @@ public class MySQLOrdersDAO implements OrdersDAO {
     }
 
     @Override
-    public void update(Orders a) {
+    public void update(Products a) {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(UPDATE);
-            stat.setDate(1,new Date(a.getOrder_date().getTime()));
-            stat.setString(2, a.getOrder_status());
-            stat.setDouble(3, a.getClient_id());
-            stat.setLong(4, a.getOrder_id());
+            stat.setString(1, a.getProduct_name());
+            stat.setString(2, a.getProduct_quantity());
+            stat.setDouble(3, a.getProduct_price());
+            stat.setLong(4, a.getProduct_id());
             if (stat.executeUpdate() == 0) {
                 throw new SQLException();
             }
@@ -73,11 +73,11 @@ public class MySQLOrdersDAO implements OrdersDAO {
     }
 
     @Override
-    public void delete(Orders a) {
+    public void delete(Products a) {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(DELETE);
-            stat.setLong(1, a.getOrder_id());
+            stat.setLong(1, a.getProduct_id());
             if (stat.executeUpdate() == 0) {
                 throw new SQLException();
             }
@@ -94,27 +94,27 @@ public class MySQLOrdersDAO implements OrdersDAO {
         }
     }
 
-    private Orders convert(ResultSet rs) throws SQLException {
-        Long orderId = rs.getLong("order_id");
-        Date date = rs.getDate("order_date");
-        String status = rs.getString("order_status");
-        int clientId = rs.getInt("client_id");
-        Orders orders = new Orders(orderId, date, status, clientId);
-        return orders;
+    private Products convert(ResultSet rs) throws SQLException {
+        Long productId = rs.getLong("product_id");
+        String name = rs.getString("product_name");
+        String quantity = rs.getString("product_quantity");
+        double price = rs.getDouble("product_price");
+        Products products = new Products(productId, name, quantity, price);
+        return products;
 
     }
 
     @Override
-    public Orders getOne(Long id) {
+    public Products getOne(Long id) {
         PreparedStatement stat = null;
         ResultSet rs = null;
-        Orders or = null;
+        Products p = null;
         try {
             stat = conn.prepareStatement(GETONE);
             stat.setLong(1, id);
             rs = stat.executeQuery();
             if (rs.next()) {
-                or = convert(rs);
+                p = convert(rs);
             } else {
                 throw new SQLException();
             }
@@ -136,20 +136,20 @@ public class MySQLOrdersDAO implements OrdersDAO {
                 }
             }
         }
-        return or;
+        return p;
     }
 
 
     @Override
-    public List<Orders  > getAll() {
+    public List<Products> getAll() {
         PreparedStatement stat = null;
         ResultSet rs = null;
-        List<Orders> orders = new ArrayList<>();
+        List<Products> products = new ArrayList<>();
         try {
             stat = conn.prepareStatement(GETALL);
             rs = stat.executeQuery();
             while (rs.next()){
-                orders.add(convert(rs));
+                products.add(convert(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -169,7 +169,7 @@ public class MySQLOrdersDAO implements OrdersDAO {
                 }
             }
         }
-        return orders;
+        return products;
     }
 
 
@@ -177,14 +177,14 @@ public class MySQLOrdersDAO implements OrdersDAO {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(jdbc,root,password);
-            OrdersDAO dao = new MySQLOrdersDAO(conn);
+            ProductsDAO dao = new MySQLProductsDAO(conn);
             /* Boss nuevo = new Boss("Anote10", 22, 42000,"All");
             nuevo.setBoss_id(4L);
             dao.insert(nuevo);
             */
-            List<Orders> orders = dao.getAll();
-            for (Orders or: orders){
-                System.out.println(or.toString());
+            List<Products> products = dao.getAll();
+            for (Products p: products){
+                System.out.println(p.toString());
             }
         } finally {
             if (conn != null){

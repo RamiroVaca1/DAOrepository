@@ -1,38 +1,37 @@
-package com.solvd.MySQLDAO;
+package com.solvd.Controller.MySQLDAO;
 
-import com.solvd.DAO.EmployeeDAO;
-import com.solvd.beams.Employee;
+import com.solvd.DAO.BossDAO;
+import com.solvd.beams.Boss;
 import static com.solvd.hideConnection.*;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySQLEmployeeDAO implements EmployeeDAO {
+public class MySQLBossDAO implements BossDAO {
 
     private Connection conn;
 
-    public MySQLEmployeeDAO(Connection conn){
+    public MySQLBossDAO(Connection conn){
         this.conn = conn;
     }
 
-    final String INSERT = "INSERT INTO employee (employee_fullname, employee_age, employee_salary, employee_type, boss_id) VALUES (?, ?, ?, ?, ?)";
-    final String UPDATE = "UPDATE employee SET employee_fullname = ?, employee_age = ?, employee_salary = ?, employee_type = ?, boss_id = ? WHERE employee_id = ?";
-    final String DELETE = "DELETE FROM employee WHERE employee_id = ?";
-    final String GETONE = "SELECT employee_id, employee_fullname, employee_age, employee_salary, employee_type, boss_id FROM employee WHERE employee_id = ?";
-    final String GETALL = "SELECT employee_id, employee_fullname, employee_age, employee_salary, employee_type, boss_id FROM employee";
+    final String INSERT = "INSERT INTO boss(boss_fullname, boss_age, boss_salary, boss_section) VALUES (?, ?, ?, ?)";
+    final String UPDATE = "UPDATE boss SET boss_fullname = ?, boss_age = ?, boss_salary = ?, boss_section = ? WHERE boss_id = ?";
+    final String DELETE = "DELETE FROM boss WHERE boss_id = ?";
+    final String GETONE = "SELECT boss_id, boss_fullname, boss_age, boss_salary, boss_section FROM boss WHERE boss_id = ?";
+    final String GETALL = "SELECT boss_id, boss_fullname, boss_age, boss_salary, boss_section FROM boss";
 
 
     @Override
-    public void insert(Employee a) {
+    public void insert(Boss a) {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(INSERT);
-            stat.setString(1, a.getEmployee_fullname());
-            stat.setInt(2, a.getEmployee_age());
-            stat.setDouble(3, a.getEmployee_salary());
-            stat.setString(4, a.getEmployee_type());
-            stat.setInt(5, a.getBoss_id());
+            stat.setString(1, a.getBoss_fullname());
+            stat.setInt(2, a.getBoss_age());
+            stat.setDouble(3, a.getBoss_salary());
+            stat.setString(4, a.getBoss_section());
             if (stat.executeUpdate() == 0) {
                 throw new SQLException();
             }
@@ -50,16 +49,15 @@ public class MySQLEmployeeDAO implements EmployeeDAO {
     }
 
     @Override
-    public void update(Employee a) {
+    public void update(Boss a) {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(UPDATE);
-            stat.setString(1, a.getEmployee_fullname());
-            stat.setInt(2, a.getEmployee_age());
-            stat.setDouble(3, a.getEmployee_salary());
-            stat.setString(4, a.getEmployee_type());
-            stat.setInt(5, a.getBoss_id());
-            stat.setLong(6,a.getEmployee_id());
+            stat.setString(1, a.getBoss_fullname());
+            stat.setInt(2, a.getBoss_age());
+            stat.setDouble(3, a.getBoss_salary());
+            stat.setString(4, a.getBoss_section());
+            stat.setLong(5, a.getBoss_id());
             if (stat.executeUpdate() == 0) {
                 throw new SQLException();
             }
@@ -77,11 +75,11 @@ public class MySQLEmployeeDAO implements EmployeeDAO {
     }
 
     @Override
-    public void delete(Employee a) {
+    public void delete(Boss a) {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(DELETE);
-            stat.setLong(1, a.getEmployee_id());
+            stat.setLong(1, a.getBoss_id());
             if (stat.executeUpdate() == 0) {
                 throw new SQLException();
             }
@@ -98,29 +96,28 @@ public class MySQLEmployeeDAO implements EmployeeDAO {
         }
     }
 
-    private Employee convert(ResultSet rs) throws SQLException {
-        String fullname = rs.getString("employee_fullname");
-        int age = rs.getInt("employee_age");
-        double salary = rs.getDouble("employee_salary");
-        String type = rs.getString("employee_type");
-        int id = rs.getInt("boss_id");
-        Employee employee = new Employee(fullname, age, salary, type,id);
-        employee.setEmployee_id(rs.getLong("employee_id"));
-        return employee;
+    private Boss convert(ResultSet rs) throws SQLException {
+        String fullname = rs.getString("boss_fullname");
+        int age = rs.getInt("boss_age");
+        double salary = rs.getDouble("boss_salary");
+        String section = rs.getString("boss_section");
+        Boss boss = new Boss(fullname, age, salary, section);
+        boss.setBoss_id(rs.getLong("boss_id"));
+        return boss;
 
     }
 
     @Override
-    public Employee getOne(Long id) {
+    public Boss getOne(Long id) {
         PreparedStatement stat = null;
         ResultSet rs = null;
-        Employee em = null;
+        Boss b = null;
         try {
             stat = conn.prepareStatement(GETONE);
             stat.setLong(1, id);
             rs = stat.executeQuery();
             if (rs.next()) {
-                em = convert(rs);
+                b = convert(rs);
             } else {
                 throw new SQLException();
             }
@@ -142,20 +139,20 @@ public class MySQLEmployeeDAO implements EmployeeDAO {
                 }
             }
         }
-        return em;
+        return b;
     }
 
 
     @Override
-    public List<Employee> getAll() {
+    public List<Boss> getAll() {
         PreparedStatement stat = null;
         ResultSet rs = null;
-        List<Employee> employees = new ArrayList<>();
+        List<Boss> bosses = new ArrayList<>();
         try {
             stat = conn.prepareStatement(GETALL);
             rs = stat.executeQuery();
             while (rs.next()){
-                employees.add(convert(rs));
+                bosses.add(convert(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -175,7 +172,7 @@ public class MySQLEmployeeDAO implements EmployeeDAO {
                 }
             }
         }
-        return employees;
+        return bosses;
     }
 
 
@@ -183,14 +180,14 @@ public class MySQLEmployeeDAO implements EmployeeDAO {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(jdbc,root,password);
-            EmployeeDAO dao = new MySQLEmployeeDAO(conn);
+            BossDAO dao = new MySQLBossDAO(conn);
             /* Boss nuevo = new Boss("Anote10", 22, 42000,"All");
             nuevo.setBoss_id(4L);
             dao.insert(nuevo);
             */
-            List<Employee> employees = dao.getAll();
-            for (Employee em: employees){
-                System.out.println(em.toString());
+            List<Boss> bosses = dao.getAll();
+            for (Boss b: bosses){
+                System.out.println(b.toString());
             }
         } finally {
             if (conn != null){

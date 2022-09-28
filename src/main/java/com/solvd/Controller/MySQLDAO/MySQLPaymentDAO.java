@@ -1,4 +1,4 @@
-package com.solvd.MySQLDAO;
+package com.solvd.Controller.MySQLDAO;
 
 import com.solvd.DAO.PaymentDAO;
 import com.solvd.beams.Payment;

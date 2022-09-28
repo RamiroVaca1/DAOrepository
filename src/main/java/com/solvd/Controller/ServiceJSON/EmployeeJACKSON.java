@@ -1,7 +1,7 @@
-package com.solvd.xml.ServiceJSON;
+package com.solvd.Controller.ServiceJSON;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.solvd.xml.ServiceJAXB.Employees;
+import com.solvd.Controller.ServiceJAXB.Employees;
 import com.solvd.beams.Employee;
 
 import java.io.File;

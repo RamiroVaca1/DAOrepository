@@ -1,39 +1,37 @@
-package com.solvd.MySQLDAO;
+package com.solvd.Controller.MySQLDAO;
 
-import com.solvd.DAO.Boss_infoDAO;
-import com.solvd.beams.Boss_info;
+import com.solvd.DAO.Order_detailsDAO;
+import com.solvd.beams.Order_details;
 import static com.solvd.hideConnection.*;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySQLBoss_infoDAO implements Boss_infoDAO {
+public class MySQLOrder_detailsDAO implements Order_detailsDAO {
 
     private Connection conn;
 
-    public MySQLBoss_infoDAO(Connection conn){
+    public MySQLOrder_detailsDAO(Connection conn){
         this.conn = conn;
     }
 
-    final String INSERT = "INSERT INTO boss_info (boss_street, boss_phone, boss_gender, boss_country, boss_city, boss_id) VALUES (?, ?, ?, ?, ?, ?)";
-    final String UPDATE = "UPDATE boss_info SET boss_street = ?, boss_phone = ?, boss_gender = ?, boss_country = ?, boss_city = ?, boss_id = ? WHERE boss_info_id = ?";
-    final String DELETE = "DELETE FROM boss_info WHERE boss_info_id = ?";
-    final String GETONE = "SELECT boss_info_id, boss_street, boss_phone, boss_gender, boss_country, boss_city, boss_id FROM boss_info WHERE boss_info_id = ?";
-    final String GETALL = "SELECT boss_info_id, boss_street, boss_phone, boss_gender, boss_country, boss_city, boss_id FROM boss_info";
+    final String INSERT = "INSERT INTO order_details (order_id, product_id, order_quantity, order_price) VALUES (?, ?, ?, ?)";
+    final String UPDATE = "UPDATE order_details SET order_id = ?, product_id = ?, order_quantity = ?, order_price = ? WHERE order_id = ?";
+    final String DELETE = "DELETE FROM order_details WHERE order_id = ?";
+    final String GETONE = "SELECT order_id, product_id, order_quantity, order_price FROM order_details WHERE order_id = ?";
+    final String GETALL = "SELECT order_id, product_id, order_quantity, order_price FROM order_details";
 
 
     @Override
-    public void insert(Boss_info a) {
+    public void insert(Order_details a) {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(INSERT);
-            stat.setString(1, a.getBoss_street());
-            stat.setString(2, a.getBoss_phone());
-            stat.setString(3, a.getBoss_gender());
-            stat.setString(4, a.getBoss_country());
-            stat.setString(5, a.getBoss_city());
-            stat.setInt(6, a.getBoss_id());
+            stat.setLong(1, a.getOrder_id());
+            stat.setLong(2, a.getProduct_id());
+            stat.setInt(3, a.getOrder_quantity());
+            stat.setDouble(4, a.getOrder_price());
             if (stat.executeUpdate() == 0) {
                 throw new SQLException();
             }
@@ -51,17 +49,15 @@ public class MySQLBoss_infoDAO implements Boss_infoDAO {
     }
 
     @Override
-    public void update(Boss_info a) {
+    public void update(Order_details a) {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(UPDATE);
-            stat.setString(1, a.getBoss_street());
-            stat.setString(2, a.getBoss_phone());
-            stat.setString(3, a.getBoss_gender());
-            stat.setString(4, a.getBoss_country());
-            stat.setString(5, a.getBoss_city());
-            stat.setInt(6, a.getBoss_id());
-            stat.setLong(7,a.getBoss_info_id());
+            stat.setLong(1, a.getOrder_id());
+            stat.setLong(2, a.getProduct_id());
+            stat.setInt(3, a.getOrder_quantity());
+            stat.setDouble(4, a.getOrder_price());
+            stat.setLong(5, a.getOrder_id());
             if (stat.executeUpdate() == 0) {
                 throw new SQLException();
             }
@@ -79,11 +75,11 @@ public class MySQLBoss_infoDAO implements Boss_infoDAO {
     }
 
     @Override
-    public void delete(Boss_info a) {
+    public void delete(Order_details a) {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(DELETE);
-            stat.setLong(1, a.getBoss_info_id());
+            stat.setLong(1, a.getOrder_id());
             if (stat.executeUpdate() == 0) {
                 throw new SQLException();
             }
@@ -100,30 +96,27 @@ public class MySQLBoss_infoDAO implements Boss_infoDAO {
         }
     }
 
-    private Boss_info convert(ResultSet rs) throws SQLException {
-        String street = rs.getString("boss_street");
-        String phone = rs.getString("boss_phone");
-        String gender = rs.getString("boss_gender");
-        String country = rs.getString("boss_country");
-        String city = rs.getString("boss_city");
-        int id = rs.getInt("boss_id");
-        Boss_info boss_info = new Boss_info(street, phone, gender, country, city,id);
-        boss_info.setBoss_info_id(rs.getLong("boss_info_id"));
-        return boss_info;
+    private Order_details convert(ResultSet rs) throws SQLException {
+        Long orderId = rs.getLong("order_id");
+        Long productId = rs.getLong("product_id");
+        int quantity = rs.getInt("order_quantity");
+        double price = rs.getDouble("order_price");
+        Order_details order_details = new Order_details(orderId, productId, quantity, price);
+        return order_details;
 
     }
 
     @Override
-    public Boss_info getOne(Long id) {
+    public Order_details getOne(Long id) {
         PreparedStatement stat = null;
         ResultSet rs = null;
-        Boss_info b = null;
+        Order_details or = null;
         try {
             stat = conn.prepareStatement(GETONE);
             stat.setLong(1, id);
             rs = stat.executeQuery();
             if (rs.next()) {
-                b = convert(rs);
+                or = convert(rs);
             } else {
                 throw new SQLException();
             }
@@ -145,20 +138,20 @@ public class MySQLBoss_infoDAO implements Boss_infoDAO {
                 }
             }
         }
-        return b;
+        return or;
     }
 
 
     @Override
-    public List<Boss_info> getAll() {
+    public List<Order_details> getAll() {
         PreparedStatement stat = null;
         ResultSet rs = null;
-        List<Boss_info> bosses_info = new ArrayList<>();
+        List<Order_details> orders_details = new ArrayList<>();
         try {
             stat = conn.prepareStatement(GETALL);
             rs = stat.executeQuery();
             while (rs.next()){
-                bosses_info.add(convert(rs));
+                orders_details.add(convert(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -178,7 +171,7 @@ public class MySQLBoss_infoDAO implements Boss_infoDAO {
                 }
             }
         }
-        return bosses_info;
+        return orders_details;
     }
 
 
@@ -186,14 +179,14 @@ public class MySQLBoss_infoDAO implements Boss_infoDAO {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(jdbc,root,password);
-            Boss_infoDAO dao = new MySQLBoss_infoDAO(conn);
+            Order_detailsDAO dao = new MySQLOrder_detailsDAO(conn);
             /* Boss nuevo = new Boss("Anote10", 22, 42000,"All");
             nuevo.setBoss_id(4L);
             dao.insert(nuevo);
             */
-            List<Boss_info> bosses_info = dao.getAll();
-            for (Boss_info b: bosses_info){
-                System.out.println(b.toString());
+            List<Order_details> order_details = dao.getAll();
+            for (Order_details or: order_details){
+                System.out.println(or.toString());
             }
         } finally {
             if (conn != null){

@@ -1,38 +1,36 @@
-package com.solvd.MySQLDAO;
+package com.solvd.Controller.MySQLDAO;
 
-import com.solvd.DAO.ClientDAO;
-import com.solvd.beams.Client;
+import com.solvd.DAO.OrdersDAO;
+import com.solvd.beams.Orders;
 import static com.solvd.hideConnection.*;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySQLClientDAO implements ClientDAO {
+public class MySQLOrdersDAO implements OrdersDAO {
 
     private Connection conn;
 
-    public MySQLClientDAO(Connection conn){
+    public MySQLOrdersDAO(Connection conn){
         this.conn = conn;
     }
 
-    final String INSERT = "INSERT INTO client (client_fullname, client_phone, client_address, client_city, client_country) VALUES (?, ?, ?, ?, ?)";
-    final String UPDATE = "UPDATE client SET client_fullname = ?, client_phone = ?, client_address = ?, client_city = ?, client_country = ? WHERE client_id = ?";
-    final String DELETE = "DELETE FROM client WHERE client_id = ?";
-    final String GETONE = "SELECT client_id, client_fullname, client_phone, client_address, client_city, client_country FROM client WHERE client_id = ?";
-    final String GETALL = "SELECT client_id, client_fullname, client_phone, client_address, client_city, client_country FROM client";
+    final String INSERT = "INSERT INTO orders (order_date, order_status, client_id) VALUES (?, ?, ?)";
+    final String UPDATE = "UPDATE orders SET order_date = ?, order_status = ?, client_id = ? WHERE order_id = ?";
+    final String DELETE = "DELETE FROM orders WHERE order_id = ?";
+    final String GETONE = "SELECT order_id, order_date, order_status, client_id FROM orders WHERE order_id = ?";
+    final String GETALL = "SELECT order_id, order_date, order_status, client_id FROM orders";
 
 
     @Override
-    public void insert(Client a) {
+    public void insert(Orders a) {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(INSERT);
-            stat.setString(1, a.getClient_fullname());
-            stat.setString(2, a.getClient_phone());
-            stat.setString(3, a.getClient_address());
-            stat.setString(4, a.getClient_city());
-            stat.setString(5, a.getClient_country());
+            stat.setDate(1,new Date(a.getOrder_date().getTime()));
+            stat.setString(2, a.getOrder_status());
+            stat.setDouble(3, a.getClient_id());
             if (stat.executeUpdate() == 0) {
                 throw new SQLException();
             }
@@ -50,16 +48,14 @@ public class MySQLClientDAO implements ClientDAO {
     }
 
     @Override
-    public void update(Client a) {
+    public void update(Orders a) {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(UPDATE);
-            stat.setString(1, a.getClient_fullname());
-            stat.setString(2, a.getClient_phone());
-            stat.setString(3, a.getClient_address());
-            stat.setString(4, a.getClient_city());
-            stat.setString(5, a.getClient_country());
-            stat.setLong(6,a.getClient_id());
+            stat.setDate(1,new Date(a.getOrder_date().getTime()));
+            stat.setString(2, a.getOrder_status());
+            stat.setDouble(3, a.getClient_id());
+            stat.setLong(4, a.getOrder_id());
             if (stat.executeUpdate() == 0) {
                 throw new SQLException();
             }
@@ -77,11 +73,11 @@ public class MySQLClientDAO implements ClientDAO {
     }
 
     @Override
-    public void delete(Client a) {
+    public void delete(Orders a) {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(DELETE);
-            stat.setLong(1, a.getClient_id());
+            stat.setLong(1, a.getOrder_id());
             if (stat.executeUpdate() == 0) {
                 throw new SQLException();
             }
@@ -98,29 +94,27 @@ public class MySQLClientDAO implements ClientDAO {
         }
     }
 
-    private Client convert(ResultSet rs) throws SQLException {
-        String fullname = rs.getString("client_fullname");
-        String phone = rs.getString("client_phone");
-        String address = rs.getString("client_address");
-        String city = rs.getString("client_city");
-        String country = rs.getString("client_country");
-        Client client = new Client(fullname, phone, address, city, country);
-        client.setClient_id(rs.getLong("client_id"));
-        return client;
+    private Orders convert(ResultSet rs) throws SQLException {
+        Long orderId = rs.getLong("order_id");
+        Date date = rs.getDate("order_date");
+        String status = rs.getString("order_status");
+        int clientId = rs.getInt("client_id");
+        Orders orders = new Orders(orderId, date, status, clientId);
+        return orders;
 
     }
 
     @Override
-    public Client getOne(Long id) {
+    public Orders getOne(Long id) {
         PreparedStatement stat = null;
         ResultSet rs = null;
-        Client c = null;
+        Orders or = null;
         try {
             stat = conn.prepareStatement(GETONE);
             stat.setLong(1, id);
             rs = stat.executeQuery();
             if (rs.next()) {
-                c = convert(rs);
+                or = convert(rs);
             } else {
                 throw new SQLException();
             }
@@ -142,20 +136,20 @@ public class MySQLClientDAO implements ClientDAO {
                 }
             }
         }
-        return c;
+        return or;
     }
 
 
     @Override
-    public List<Client> getAll() {
+    public List<Orders  > getAll() {
         PreparedStatement stat = null;
         ResultSet rs = null;
-        List<Client> clients = new ArrayList<>();
+        List<Orders> orders = new ArrayList<>();
         try {
             stat = conn.prepareStatement(GETALL);
             rs = stat.executeQuery();
             while (rs.next()){
-                clients.add(convert(rs));
+                orders.add(convert(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -175,7 +169,7 @@ public class MySQLClientDAO implements ClientDAO {
                 }
             }
         }
-        return clients;
+        return orders;
     }
 
 
@@ -183,14 +177,14 @@ public class MySQLClientDAO implements ClientDAO {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(jdbc,root,password);
-            ClientDAO dao = new MySQLClientDAO(conn);
+            OrdersDAO dao = new MySQLOrdersDAO(conn);
             /* Boss nuevo = new Boss("Anote10", 22, 42000,"All");
             nuevo.setBoss_id(4L);
             dao.insert(nuevo);
             */
-            List<Client> clients = dao.getAll();
-            for (Client c: clients){
-                System.out.println(c.toString());
+            List<Orders> orders = dao.getAll();
+            for (Orders or: orders){
+                System.out.println(or.toString());
             }
         } finally {
             if (conn != null){

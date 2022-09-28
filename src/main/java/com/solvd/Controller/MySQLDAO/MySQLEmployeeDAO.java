@@ -1,36 +1,38 @@
-package com.solvd.MySQLDAO;
+package com.solvd.Controller.MySQLDAO;
 
-import com.solvd.DAO.ProductsDAO;
-import com.solvd.beams.Products;
+import com.solvd.DAO.EmployeeDAO;
+import com.solvd.beams.Employee;
 import static com.solvd.hideConnection.*;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySQLProductsDAO implements ProductsDAO {
+public class MySQLEmployeeDAO implements EmployeeDAO {
 
     private Connection conn;
 
-    public MySQLProductsDAO(Connection conn){
+    public MySQLEmployeeDAO(Connection conn){
         this.conn = conn;
     }
 
-    final String INSERT = "INSERT INTO products (product_name, product_quantity, product_price) VALUES (?, ?, ?)";
-    final String UPDATE = "UPDATE products SET product_name = ?, product_quantity = ?, product_price = ? WHERE product_id = ?";
-    final String DELETE = "DELETE FROM products WHERE product_id = ?";
-    final String GETONE = "SELECT product_id, product_name, product_quantity, product_price FROM products WHERE product_id = ?";
-    final String GETALL = "SELECT product_id, product_name, product_quantity, product_price FROM products";
+    final String INSERT = "INSERT INTO employee (employee_fullname, employee_age, employee_salary, employee_type, boss_id) VALUES (?, ?, ?, ?, ?)";
+    final String UPDATE = "UPDATE employee SET employee_fullname = ?, employee_age = ?, employee_salary = ?, employee_type = ?, boss_id = ? WHERE employee_id = ?";
+    final String DELETE = "DELETE FROM employee WHERE employee_id = ?";
+    final String GETONE = "SELECT employee_id, employee_fullname, employee_age, employee_salary, employee_type, boss_id FROM employee WHERE employee_id = ?";
+    final String GETALL = "SELECT employee_id, employee_fullname, employee_age, employee_salary, employee_type, boss_id FROM employee";
 
 
     @Override
-    public void insert(Products a) {
+    public void insert(Employee a) {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(INSERT);
-            stat.setString(1, a.getProduct_name());
-            stat.setString(2, a.getProduct_quantity());
-            stat.setDouble(3, a.getProduct_price());
+            stat.setString(1, a.getEmployee_fullname());
+            stat.setInt(2, a.getEmployee_age());
+            stat.setDouble(3, a.getEmployee_salary());
+            stat.setString(4, a.getEmployee_type());
+            stat.setInt(5, a.getBoss_id());
             if (stat.executeUpdate() == 0) {
                 throw new SQLException();
             }
@@ -48,14 +50,16 @@ public class MySQLProductsDAO implements ProductsDAO {
     }
 
     @Override
-    public void update(Products a) {
+    public void update(Employee a) {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(UPDATE);
-            stat.setString(1, a.getProduct_name());
-            stat.setString(2, a.getProduct_quantity());
-            stat.setDouble(3, a.getProduct_price());
-            stat.setLong(4, a.getProduct_id());
+            stat.setString(1, a.getEmployee_fullname());
+            stat.setInt(2, a.getEmployee_age());
+            stat.setDouble(3, a.getEmployee_salary());
+            stat.setString(4, a.getEmployee_type());
+            stat.setInt(5, a.getBoss_id());
+            stat.setLong(6,a.getEmployee_id());
             if (stat.executeUpdate() == 0) {
                 throw new SQLException();
             }
@@ -73,11 +77,11 @@ public class MySQLProductsDAO implements ProductsDAO {
     }
 
     @Override
-    public void delete(Products a) {
+    public void delete(Employee a) {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(DELETE);
-            stat.setLong(1, a.getProduct_id());
+            stat.setLong(1, a.getEmployee_id());
             if (stat.executeUpdate() == 0) {
                 throw new SQLException();
             }
@@ -94,27 +98,29 @@ public class MySQLProductsDAO implements ProductsDAO {
         }
     }
 
-    private Products convert(ResultSet rs) throws SQLException {
-        Long productId = rs.getLong("product_id");
-        String name = rs.getString("product_name");
-        String quantity = rs.getString("product_quantity");
-        double price = rs.getDouble("product_price");
-        Products products = new Products(productId, name, quantity, price);
-        return products;
+    private Employee convert(ResultSet rs) throws SQLException {
+        String fullname = rs.getString("employee_fullname");
+        int age = rs.getInt("employee_age");
+        double salary = rs.getDouble("employee_salary");
+        String type = rs.getString("employee_type");
+        int id = rs.getInt("boss_id");
+        Employee employee = new Employee(fullname, age, salary, type,id);
+        employee.setEmployee_id(rs.getLong("employee_id"));
+        return employee;
 
     }
 
     @Override
-    public Products getOne(Long id) {
+    public Employee getOne(Long id) {
         PreparedStatement stat = null;
         ResultSet rs = null;
-        Products p = null;
+        Employee em = null;
         try {
             stat = conn.prepareStatement(GETONE);
             stat.setLong(1, id);
             rs = stat.executeQuery();
             if (rs.next()) {
-                p = convert(rs);
+                em = convert(rs);
             } else {
                 throw new SQLException();
             }
@@ -136,20 +142,20 @@ public class MySQLProductsDAO implements ProductsDAO {
                 }
             }
         }
-        return p;
+        return em;
     }
 
 
     @Override
-    public List<Products> getAll() {
+    public List<Employee> getAll() {
         PreparedStatement stat = null;
         ResultSet rs = null;
-        List<Products> products = new ArrayList<>();
+        List<Employee> employees = new ArrayList<>();
         try {
             stat = conn.prepareStatement(GETALL);
             rs = stat.executeQuery();
             while (rs.next()){
-                products.add(convert(rs));
+                employees.add(convert(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -169,7 +175,7 @@ public class MySQLProductsDAO implements ProductsDAO {
                 }
             }
         }
-        return products;
+        return employees;
     }
 
 
@@ -177,14 +183,14 @@ public class MySQLProductsDAO implements ProductsDAO {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(jdbc,root,password);
-            ProductsDAO dao = new MySQLProductsDAO(conn);
+            EmployeeDAO dao = new MySQLEmployeeDAO(conn);
             /* Boss nuevo = new Boss("Anote10", 22, 42000,"All");
             nuevo.setBoss_id(4L);
             dao.insert(nuevo);
             */
-            List<Products> products = dao.getAll();
-            for (Products p: products){
-                System.out.println(p.toString());
+            List<Employee> employees = dao.getAll();
+            for (Employee em: employees){
+                System.out.println(em.toString());
             }
         } finally {
             if (conn != null){

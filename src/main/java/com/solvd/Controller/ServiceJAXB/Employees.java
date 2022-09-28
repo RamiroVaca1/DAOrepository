@@ -1,4 +1,4 @@
-package com.solvd.xml.ServiceJAXB;
+package com.solvd.Controller.ServiceJAXB;
 
 import com.solvd.beams.Employee;
 import jakarta.xml.bind.annotation.*;
