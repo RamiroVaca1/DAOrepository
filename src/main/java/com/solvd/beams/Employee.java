@@ -1,11 +1,21 @@
 package com.solvd.beams;
 
+import javax.xml.bind.annotation.*;
+
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Employee {
+    @XmlAttribute(name = "employee_id")
     private Long employee_id;
+    @XmlAttribute(name = "employee_fullname")
     private String employee_fullname;
+    @XmlAttribute(name = "employee_age")
     private int employee_age;
+    @XmlAttribute(name = "employee_salary")
     private double employee_salary;
+    @XmlAttribute(name = "employee_type")
     private String employee_type;
+    @XmlAttribute(name = "boss_id")
     private int boss_id;
 
     public Employee(){}

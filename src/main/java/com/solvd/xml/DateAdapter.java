@@ -1,4 +1,4 @@
-package com.solvd.parse.xml;
+package com.solvd.xml;
 
 import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 

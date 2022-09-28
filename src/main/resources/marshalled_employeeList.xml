@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<employees>
+    <employee>
+        <boss_id>2</boss_id>
+        <employee_age>25</employee_age>
+        <employee_fullname>Kilian Mbappe</employee_fullname>
+        <employee_id>2</employee_id>
+        <employee_salary>2000.0</employee_salary>
+        <employee_type>Cashier</employee_type>
+    </employee>
+    <employee>
+        <boss_id>0</boss_id>
+        <employee_age>0</employee_age>
+        <employee_salary>0.0</employee_salary>
+    </employee>
+</employees>
