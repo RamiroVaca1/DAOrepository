@@ -8,7 +8,7 @@ import java.util.List;
 public interface EmployeeMapper {
 
     public static void main(String[] args) {
-        
+
     }
 
     @Select("select * from employee")

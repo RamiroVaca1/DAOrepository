@@ -35,10 +35,9 @@ public class EmployeeJAXB {
 
             ms.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-            //Marshal the cars list in console
             ms.marshal(employee, System.out);
 
-            //Marshal the cars list in file
+
             ms.marshal(employee, new File("src/main/resources/marshalled_employee.xml"));
 
 

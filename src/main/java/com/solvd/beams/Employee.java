@@ -2,7 +2,7 @@ package com.solvd.beams;
 
 import javax.xml.bind.annotation.*;
 
-@XmlRootElement
+@XmlRootElement(name = "employee")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Employee {
     @XmlAttribute(name = "employee_id")
