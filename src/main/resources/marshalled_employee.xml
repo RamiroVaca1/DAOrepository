@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:employee xmlns:ns2="com.codenotfound.jaxb.model">
+    <boss_id>1</boss_id>
+    <employee_age>21</employee_age>
+    <employee_fullname>Jorge Casanova</employee_fullname>
+    <employee_id>1</employee_id>
+    <employee_salary>1700.0</employee_salary>
+    <employee_type>Cleaner</employee_type>
+</ns2:employee>
