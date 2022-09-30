@@ -14,9 +14,9 @@ public class Runner {
         lista.forEach((e) -> {
             System.out.println(e);
         });
-/*
+
         System.out.println("> Lectura de registro id=1");
-        Employee employee = employeeService.read(1L);
+        Employee employee = employeeService.select(1L);
         System.out.println("> " +  employee);
         System.out.println("> Actualizando edad" );
         employee.setEmployee_age(28);
@@ -26,13 +26,13 @@ public class Runner {
         employeeService.delete(2L);
 
         System.out.println("> creando nuevo registro ");
-        employeeService.create(new Employee());
+        employeeService.insert(new Employee());
 
         lista = employeeService.getAll();
         lista.forEach((p) -> {
             System.out.println(p);
         });
 
- */
+
     }
 }

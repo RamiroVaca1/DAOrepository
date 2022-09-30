@@ -14,7 +14,7 @@ public class EmployeeService {
         return employeeMapper.getAll();
     }
 
-    public void create(Employee employee) {
+    public void insert(Employee employee) {
         SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
         EmployeeMapper employeeMapper = sqlSession.getMapper(EmployeeMapper.class);
         employeeMapper.insert(employee);
@@ -22,7 +22,7 @@ public class EmployeeService {
         sqlSession.close();
     }
 
-    public Employee read(Long id) {
+    public Employee select(Long id) {
         SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
         EmployeeMapper employeeMapper = sqlSession.getMapper(EmployeeMapper.class);
 
