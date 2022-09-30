@@ -13,4 +13,13 @@ public interface EmployeeMapper {
 
     @Select("select * from employee")
     List<Employee> getAll();
+
+    void insert(Employee employee);
+
+    void delete (Long id);
+
+    void update(Employee employee);
+
+    Employee select(Long id);
+
 }

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+        'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='org.example.data.PersonaMapper'>
+
+    <resultMap type='Employee' id='EmployeeList'>
+        <id property='employee_id' column='employee_id'/>
+        <result property='employee_fullname' column='employee_fullname'/>
+        <result property='employee_age' column='employee_age'/>
+        <result property='employee_salary' column='employee_salary'/>
+        <result property='employee_type' column='employee_type'/>
+        <result property='boss_id' column='boss_id'/>
+    </resultMap>
+    <!-- Obtiene lista de personas -->
+    <select id='getAll' resultMap='EmployeeList'>
+        SELECT * FROM employee
+    </select>
+
+    <!-- Crear registro -->
+    <insert id='insert' useGeneratedKeys="true" keyProperty="employee_id" parameterType='src.main.java.com.solvd.beams.Employee'>
+        INSERT INTO employee(employee_fullname, employee_age, employee_salary, employee_type, boss_id)
+        VALUES(#{employee_fullname}, #{employee_age}, #{employee_salary}, #{employee_type}, #{boss_id})
+    </insert>
+
+    <!-- Leer registro dado su ID -->
+    <select id='select' parameterType='int' resultType='src.main.java.com.solvd.beams.Employee'>
+        SELECT  * FROM employee WHERE employee_id = #{employee_id}
+    </select>
+
+    <!-- Actualizar registro -->
+    <update id='update' parameterType='src.main.java.com.solvd.beams.Employee'>
+        UPDATE employee
+        SET
+        employee_fullname= #{employee_fullname},
+        employee_age = #{employee_age},
+        employee_salary= #{employee_salary}
+        employee_type= #{employee_type}
+        boss_id= #{boss_id}
+        WHERE employee_id = #{employee_id}
+    </update>
+
+    <!-- Eliminar registro dado su ID -->
+    <delete id='delete' parameterType='int'>
+        DELETE FROM employee WHERE employee_id = #{employee_id}
+    </delete>
+
+</mapper>

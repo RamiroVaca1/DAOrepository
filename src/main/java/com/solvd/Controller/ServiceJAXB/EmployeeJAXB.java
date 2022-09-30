@@ -28,7 +28,7 @@ public class EmployeeJAXB {
 
             employee.setEmployee_id(1L);
             employee.setEmployee_type("Cleaner");
-            employee.setEmployee_salary(1700);
+            employee.setEmployee_salary(1701);
             employee.setEmployee_age(21);
             employee.setEmployee_fullname("Jorge Casanova");
             employee.setBoss_id(1);
@@ -66,7 +66,7 @@ public class EmployeeJAXB {
 
         employee.setEmployee_id(1L);
         employee.setEmployee_type("Cleaner");
-        employee.setEmployee_salary(1700);
+        employee.setEmployee_salary(1701);
         employee.setEmployee_age(21);
         employee.setEmployee_fullname("Jorge Casanova");
         employee.setBoss_id(1);
