@@ -23,7 +23,7 @@
     </insert>
 
     <!-- Leer registro dado su ID -->
-    <select id='select' parameterType='int' resultType='src.main.java.com.solvd.beams.Employee'>
+    <select id='select' parameterType='Long' resultType='src.main.java.com.solvd.beams.Employee'>
         SELECT  * FROM employee WHERE employee_id = #{employee_id}
     </select>
 
@@ -40,7 +40,7 @@
     </update>
 
     <!-- Eliminar registro dado su ID -->
-    <delete id='delete' parameterType='int'>
+    <delete id='delete' parameterType='Long'>
         DELETE FROM employee WHERE employee_id = #{employee_id}
     </delete>
 
