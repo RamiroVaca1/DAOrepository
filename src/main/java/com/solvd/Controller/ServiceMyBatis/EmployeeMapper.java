@@ -4,7 +4,6 @@ import com.solvd.beams.Employee;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
-
 public interface EmployeeMapper {
 
     public static void main(String[] args) {

@@ -9,6 +9,8 @@ import java.io.Reader;
 
 public class MyBatisUtil {
 
+
+
     private static SqlSessionFactory factory;
 
     private MyBatisUtil() {
@@ -17,7 +19,7 @@ public class MyBatisUtil {
     static {
         Reader reader = null;
         try {
-            reader = Resources.getResourceAsReader("resources/mybatis-config.xml");
+            reader = Resources.getResourceAsReader("mybatis-config.xml");
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }

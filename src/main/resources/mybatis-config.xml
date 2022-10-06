@@ -15,6 +15,6 @@
         </environment>
     </environments>
     <mappers>
-        <mapper resource="src/main/java/com/solvd/Controller/ServiceMyBatis/EmployeeMapper.xml"/>
+        <mapper resource="EmployeeMapper.xml"/>
     </mappers>
 </configuration>

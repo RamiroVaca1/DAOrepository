@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
         'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
-<mapper namespace='src/main/java/com/solvd/Controller/ServiceMyBatis/EmployeeMapper.xml"'>
+<mapper namespace='com.solvd.Controller.ServiceMyBatis.EmployeeMapper'>
 
-    <resultMap type='Employee' id='EmployeeList'>
-        <id property='employee_id' column='employee_id'/>
+    <resultMap id='empResultMap' type='com.solvd.beams.Employee' >
+        <result property='employee_id' column='employee_id'/>
         <result property='employee_fullname' column='employee_fullname'/>
         <result property='employee_age' column='employee_age'/>
         <result property='employee_salary' column='employee_salary'/>
@@ -12,7 +12,7 @@
         <result property='boss_id' column='boss_id'/>
     </resultMap>
     <!-- Obtiene lista de personas -->
-    <select id='getAll' resultMap='EmployeeList'>
+    <select id='getAll' resultMap='empResultMap'>
         SELECT * FROM employee
     </select>
 
